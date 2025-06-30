@@ -6,7 +6,7 @@ import { useAccount, useSwitchChain } from "wagmi";
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { mainnet, base, baseSepolia, baseGoerli } from "wagmi/chains";
-import { coinbaseWallet } from "wagmi/connectors";
+import { coinbaseWallet, metaMask, injected } from "wagmi/connectors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import {
@@ -128,6 +128,12 @@ const wagmiConfig = createConfig({
     coinbaseWallet({
       appName: "OnchainKit",
     }),
+    metaMask({
+      dappMetadata: {
+        name: "OnchainKit",
+      },
+    }),
+    injected(),
   ],
   ssr: true,
   transports: {
@@ -396,7 +402,12 @@ export function CafeUnitTest({ nftNum }) {
     if (isDisconnected) {
       return (
         <div>
-          <WalletDefault />
+          <Wallet>
+            <ConnectWallet>
+              <Avatar className="h-6 w-6" />
+              <Name />
+            </ConnectWallet>
+          </Wallet>
           <div>Please connect your wallet.</div>
         </div>
       );
@@ -505,6 +516,12 @@ function CafeUnitTestWithProviders(props) {
         coinbaseWallet({
           appName: "OnchainKit",
         }),
+        metaMask({
+          dappMetadata: {
+            name: "OnchainKit",
+          },
+        }),
+        injected(),
       ],
       ssr: true,
       transports: {
@@ -541,6 +558,9 @@ function CafeUnitTestWithProviders(props) {
             appearance: {
               mode: "auto",
               theme: "default",
+            },
+            wallet: {
+              display: 'modal',
             },
           }}
         >
